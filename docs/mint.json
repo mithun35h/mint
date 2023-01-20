@@ -27,9 +27,9 @@
   },
   "anchors": [
     {
-      "name": "Components Reference",
+      "name": "Components",
       "icon": "code",
-      "url": "component-reference"
+      "url": "components-reference"
     },
     {
       "name": "Showcase",
@@ -77,7 +77,6 @@
         "components/image",
         "components/list",
         "components/code",
-        "components/callout",
         "components/embed",
         "components/table",
         "components/custom-snippets"
@@ -86,13 +85,14 @@
     {
       "group": "Components",
       "pages": [
-        "component-reference/accordion",
-        "component-reference/accordion-group",
-        "component-reference/card",
-        "component-reference/card-group",
-        "component-reference/frame",
-        "component-reference/tabs",
-        "component-reference/tooltip"
+        "components-reference/accordion",
+        "components-reference/accordion-group",
+        "components-reference/card",
+        "components-reference/card-group",
+        "components-reference/callouts",
+        "components-reference/frame",
+        "components-reference/tabs",
+        "components-reference/tooltip"
       ]
     },
     {

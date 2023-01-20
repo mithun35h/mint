@@ -3,48 +3,40 @@ title: Tabs
 description: Toggle content using the Tabs component
 ---
 
-## Example
+You can add any number of tabs.
 
 <Tabs>
   <Tab title="First Tab">
     ☝️ Welcome to the content that you can only see inside the first Tab.
   </Tab>
-
   <Tab title="Second Tab">
-    ✌️ And... here's content that's only inside the second Tab.
+    ✌️ Here's content that's only inside the second Tab.
   </Tab>
-
   <Tab title="Third Tab">
-    Lastly, here's the third tab at the end.
+    💪 Here's content that's only inside the third Tab.
   </Tab>
 </Tabs>
 
-## Usage
+<RequestExample>
 
-You can add any number of tabs.
-
-```jsx
+```jsx Tabs Example
 <Tabs>
   <Tab title="First Tab">
     ☝️ Welcome to the content that you can only see inside the first Tab.
   </Tab>
-
   <Tab title="Second Tab">
-    ✌️ And... here's content that's only inside the second Tab.
+    ✌️ Here's content that's only inside the second Tab.
   </Tab>
-
   <Tab title="Third Tab">
-    Lastly, here's the third tab at the end.
+    💪 Here's content that's only inside the third Tab.
   </Tab>
 </Tabs>
 ```
 
-### Props
+</RequestExample>
 
-<ResponseField name="title" type="string">
-  The name of the tab displayed in the title
-</ResponseField>
+## Tab Props
 
-<ResponseField name="children" type="markdown">
-  Content inside the tab
+<ResponseField name="title" type="string" required>
+  The title of the tab. Short titles are easier to navigate.
 </ResponseField>

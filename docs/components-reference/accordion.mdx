@@ -4,11 +4,13 @@ description: "A dropdown component for toggling content"
 ---
 
 <Accordion title="I am an Accordion.">
-  You can put any content in here.
+  You can put any content in here. Check out
+  [AccordionGroup](/component-reference/accordion-group) if you want to group
+  multiple Accordions into a single display.
 </Accordion>
 
 <RequestExample>
-  ```md
+  ```jsx Accordion Example
   <Accordion title="I am an Accordion.">
     You can put any content in here.
   </Accordion>
@@ -29,8 +31,10 @@ description: "A dropdown component for toggling content"
   Whether the Accordion is open by default.
 </ResponseField>
 
-<ResponseField name="icon" type="React component">
-  We provide six helpers that generate Font Awesome icons: solid, regular,
-  light, thin, duotone, and brands. Use them like so: light("acorn"). You can
-  also pass in arbitrary SVGs.
+<ResponseField name="icon" type="string or svg">
+  A [Font Awesome icon](https://fontawesome.com/icons) or SVG code in `icon={}`
+</ResponseField>
+
+<ResponseField name="iconType" type="string">
+  One of `regular`, `solid`, `light`, `thin`, `sharp-solid`, `duotone`, `brands`
 </ResponseField>

@@ -3,15 +3,21 @@ title: "Cards"
 description: "Highlight main points or links with customizable icons"
 ---
 
-<Card title="Card Title" icon="lightbulb">
-  This is how you use a card with an icon
+<Card title="Card Title" icon="link" href="/component-reference/card-group">
+  This is how you use a card with an icon and a link. Clicking on this card
+  brings you to the Card Group page.
 </Card>
 
-```jsx
-<Card title="Card Title" icon="lightbulb">
-  This is how you use a card with an icon
+<RequestExample>
+
+```jsx Card Example
+<Card title="Click on me" icon="link" href="/component-reference/card-group">
+  This is how you use a card with an icon and a link. Clicking on this card
+  brings you to the Card Group page.
 </Card>
 ```
+
+</RequestExample>
 
 ### Icon Settings
 
@@ -21,33 +27,19 @@ Adjust the icon type using the `iconType` property color by using the `color` pr
   Here is a card with a duotone yellow icon
 </Card>
 
-```jsx
+```jsx Card Icon Example
 <Card title="Colored Card" icon="lightbulb" iconType="duotone" color="#ca8b04">
   Here is a card with a duotone yellow icon
 </Card>
 ```
 
-### Adding a URL
+## Props
 
-Make a card a navigation item by adding the `href` property like you would on an anchor element.
-
-<Card title="Click on me" icon="link" href="/quickstart">
-  Clicking on this card brings you to the quickstart page
-</Card>
-
-```jsx
-<Card title="Click on me" icon="link" href="/quickstart">
-  Clicking on this card brings you to the quickstart page
-</Card>
-```
-
-### Props
-
-<ResponseField name="title" required type="string">
+<ResponseField name="title" type="string" required>
   The title of the card
 </ResponseField>
 
-<ResponseField name="icon" type="Icon">
+<ResponseField name="icon" type="string or svg">
   A [Font Awesome icon](https://fontawesome.com/icons) or SVG code in `icon={}`
 </ResponseField>
 
@@ -61,9 +53,4 @@ Make a card a navigation item by adding the `href` property like you would on an
 
 <ResponseField name="href" type="string">
   The url that clicking on the card would navigate the user to
-</ResponseField>
-
-<ResponseField name="children" type="MDX or string">
-  Supplemental information for the card under the title (e.g. description,
-  examples)
 </ResponseField>
