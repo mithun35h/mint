@@ -57,7 +57,6 @@ const dev = async (argv: ArgumentsCamelCase) => {
   const MINT_PATH = path.join(DOT_MINTLIFY, "mint");
   shell.cd(MINT_PATH);
 
-  // The CLI can only run offline if Mint was already downloaded
   const internet = await isInternetAvailable();
   if (!internet && !(await pathExists(CLIENT_PATH))) {
     logger.fail(
@@ -66,16 +65,11 @@ const dev = async (argv: ArgumentsCamelCase) => {
     process.exit(1);
   }
 
-  // Avoid checking if we are on the target Mint if we are offline
   if (internet) {
     const mintVersionExists = await pathExists(VERSION_PATH);
 
-    // We always download the target version of Mintlify if the mint-version.txt file doesn't exist.
-    // We do this because users updating from an older version of the CLI never have mint-version.txt set.
     let downloadTargetMint = !mintVersionExists;
 
-    // Download target mint if the current version is different. Keep in mind this also allows
-    // downgrading to an older version of Mintlify by installing an older CLI version.
     if (mintVersionExists) {
       const currVersion = fse.readFileSync(VERSION_PATH, "utf8");
       if (currVersion !== TARGET_MINT_VERSION) {
@@ -84,7 +78,6 @@ const dev = async (argv: ArgumentsCamelCase) => {
     }
 
     if (downloadTargetMint) {
-      // Delete any existing contents
       fse.emptyDirSync(MINT_PATH);
 
       logger.text = "Downloading Mintlify framework...";
@@ -111,7 +104,6 @@ const dev = async (argv: ArgumentsCamelCase) => {
         'tar -tzf mint.tar.gz | head -1 | cut -f1 -d"/"'
       ).stdout.trim();
 
-      // Delete tar file
       fse.removeSync(TAR_PATH);
 
       fse.moveSync(
@@ -119,7 +111,6 @@ const dev = async (argv: ArgumentsCamelCase) => {
         path.join(CLIENT_PATH)
       );
 
-      // Store the currently downloaded version
       fse.writeFileSync(VERSION_PATH, TARGET_MINT_VERSION);
 
       // Delete unnecessary contents downloaded from GitHub
