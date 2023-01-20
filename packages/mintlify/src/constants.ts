@@ -16,6 +16,8 @@ export const VERSION_PATH = path.join(DOT_MINTLIFY, "mint", "mint-version.txt");
 
 export const CLIENT_PATH = path.join(DOT_MINTLIFY, "mint", "client");
 
+export const MINT_PATH = path.join(DOT_MINTLIFY, "mint");
+
 // command execution location
 export const CMD_EXEC_PATH = process.cwd();
 

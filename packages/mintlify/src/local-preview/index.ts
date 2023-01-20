@@ -14,10 +14,12 @@ import {
   CMD_EXEC_PATH,
   TARGET_MINT_VERSION,
   VERSION_PATH,
+  MINT_PATH,
 } from "../constants.js";
 import { buildLogger, ensureYarn } from "../util.js";
 import listener from "./listener/index.js";
 import { ArgumentsCamelCase } from "yargs";
+import { getConfigPath } from "./listener/utils/mintConfigFile.js";
 
 const shellExec = (cmd: string) => {
   return shell.exec(cmd, { silent: true });
@@ -49,12 +51,66 @@ const promptForYarn = async () => {
   }
 };
 
+const downloadTargetMint = async (logger) => {
+  fse.emptyDirSync(MINT_PATH);
+
+  logger.text = "Downloading Mintlify framework...";
+
+  const octokit = new Octokit();
+  const downloadRes = await octokit.repos.downloadTarballArchive({
+    owner: "mintlify",
+    repo: "mint",
+    ref: TARGET_MINT_VERSION,
+  });
+
+  logger.text = "Extracting Mintlify framework...";
+  const TAR_PATH = path.join(MINT_PATH, "mint.tar.gz");
+
+  // Unzip tar file
+  fse.writeFileSync(TAR_PATH, Buffer.from(downloadRes.data as any));
+  shellExec("tar -xzf mint.tar.gz");
+
+  // List all files in tar file and get the first one.
+  // There is never anything else in the tar file, so this is safe.
+  // We do this because the folder name includes the commit sha, so we can't hardcode it.
+  // Lastly, we call .trim() to remove the newline character.
+  const extractedFolderName = shellExec(
+    'tar -tzf mint.tar.gz | head -1 | cut -f1 -d"/"'
+  ).stdout.trim();
+
+  fse.removeSync(TAR_PATH);
+
+  fse.moveSync(
+    path.join(MINT_PATH, extractedFolderName, "client"),
+    path.join(CLIENT_PATH)
+  );
+
+  fse.writeFileSync(VERSION_PATH, TARGET_MINT_VERSION);
+
+  // Delete unnecessary contents downloaded from GitHub
+  fse.removeSync(path.join(MINT_PATH, extractedFolderName));
+
+  logger.text = "Installing dependencies...";
+
+  ensureYarn(logger);
+  shell.cd(CLIENT_PATH);
+  shellExec("yarn");
+};
+
+const checkForMintJson = async (logger) => {
+  const configPath = await getConfigPath(CMD_EXEC_PATH);
+  if (configPath == null) {
+    logger.fail("Must be ran in a directory where a mint.json file exists.");
+    process.exit(1);
+  }
+  return;
+};
+
 const dev = async (argv: ArgumentsCamelCase) => {
   shell.cd(HOME_DIR);
   await promptForYarn();
   const logger = buildLogger("Preparing local Mintlify instance...");
-  await fse.ensureDir(path.join(DOT_MINTLIFY, "mint"));
-  const MINT_PATH = path.join(DOT_MINTLIFY, "mint");
+  await fse.ensureDir(MINT_PATH);
   shell.cd(MINT_PATH);
 
   const internet = await isInternetAvailable();
@@ -68,59 +124,17 @@ const dev = async (argv: ArgumentsCamelCase) => {
   if (internet) {
     const mintVersionExists = await pathExists(VERSION_PATH);
 
-    let downloadTargetMint = !mintVersionExists;
+    let needToDownloadTargetMint = !mintVersionExists;
 
     if (mintVersionExists) {
       const currVersion = fse.readFileSync(VERSION_PATH, "utf8");
       if (currVersion !== TARGET_MINT_VERSION) {
-        downloadTargetMint = true;
+        needToDownloadTargetMint = true;
       }
     }
 
-    if (downloadTargetMint) {
-      fse.emptyDirSync(MINT_PATH);
-
-      logger.text = "Downloading Mintlify framework...";
-
-      const octokit = new Octokit();
-      const downloadRes = await octokit.repos.downloadTarballArchive({
-        owner: "mintlify",
-        repo: "mint",
-        ref: TARGET_MINT_VERSION,
-      });
-
-      logger.text = "Extracting Mintlify framework...";
-      const TAR_PATH = path.join(MINT_PATH, "mint.tar.gz");
-
-      // Unzip tar file
-      fse.writeFileSync(TAR_PATH, Buffer.from(downloadRes.data as any));
-      shellExec("tar -xzf mint.tar.gz");
-
-      // List all files in tar file and get the first one.
-      // There is never anything else in the tar file, so this is safe.
-      // We do this because the folder name includes the commit sha, so we can't hardcode it.
-      // Lastly, we call .trim() to remove the newline character.
-      const extractedFolderName = shellExec(
-        'tar -tzf mint.tar.gz | head -1 | cut -f1 -d"/"'
-      ).stdout.trim();
-
-      fse.removeSync(TAR_PATH);
-
-      fse.moveSync(
-        path.join(MINT_PATH, extractedFolderName, "client"),
-        path.join(CLIENT_PATH)
-      );
-
-      fse.writeFileSync(VERSION_PATH, TARGET_MINT_VERSION);
-
-      // Delete unnecessary contents downloaded from GitHub
-      fse.removeSync(path.join(MINT_PATH, extractedFolderName));
-
-      logger.text = "Installing dependencies...";
-
-      ensureYarn(logger);
-      shell.cd(CLIENT_PATH);
-      shellExec("yarn");
+    if (needToDownloadTargetMint) {
+      await downloadTargetMint(logger);
     }
   }
 
@@ -140,10 +154,11 @@ const dev = async (argv: ArgumentsCamelCase) => {
     }
     process.exit(1);
   }
+  await checkForMintJson(logger);
   shell.cd(CLIENT_PATH);
   const relativePath = path.relative(CLIENT_PATH, CMD_EXEC_PATH);
   shellExec(`yarn preconfigure ${relativePath}`);
-  logger.succeed("Local Mintlify instance is ready. Launching your site now.");
+  logger.succeed("Local Mintlify instance is ready. Launching your site...");
   run((argv.port as string) || "3000");
 };
 
