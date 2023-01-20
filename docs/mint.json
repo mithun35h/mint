@@ -27,6 +27,11 @@
   },
   "anchors": [
     {
+      "name": "Components Reference",
+      "icon": "code",
+      "url": "component-reference"
+    },
+    {
       "name": "Showcase",
       "icon": "trophy-star",
       "url": "https://mintlify.com/showcase"
@@ -74,18 +79,20 @@
         "components/code",
         "components/callout",
         "components/embed",
-        "components/table"
+        "components/table",
+        "components/custom-snippets"
       ]
     },
     {
-      "group": "Advanced Components",
+      "group": "Components",
       "pages": [
-        "components/advanced/accordion",
-        "components/advanced/card",
-        "components/advanced/frame",
-        "components/advanced/tabs",
-        "components/advanced/tooltip",
-        "components/advanced/custom-snippets"
+        "component-reference/accordion",
+        "component-reference/accordion-group",
+        "component-reference/card",
+        "component-reference/card-group",
+        "component-reference/frame",
+        "component-reference/tabs",
+        "component-reference/tooltip"
       ]
     },
     {

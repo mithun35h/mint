@@ -1,0 +1,36 @@
+---
+title: "Accordions"
+description: "A dropdown component for toggling content"
+---
+
+<Accordion title="I am an Accordion.">
+  You can put any content in here.
+</Accordion>
+
+<RequestExample>
+  ```md
+  <Accordion title="I am an Accordion.">
+    You can put any content in here.
+  </Accordion>
+  ```
+</RequestExample>
+
+## Props
+
+<ResponseField name="title" type="string" required>
+  Title in the Accordion preview.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Detail below the title in the Accordion preview.
+</ResponseField>
+
+<ResponseField name="defaultOpen" type="boolean" default="false">
+  Whether the Accordion is open by default.
+</ResponseField>
+
+<ResponseField name="icon" type="React component">
+  We provide six helpers that generate Font Awesome icons: solid, regular,
+  light, thin, duotone, and brands. Use them like so: light("acorn"). You can
+  also pass in arbitrary SVGs.
+</ResponseField>
