@@ -10,7 +10,7 @@ import { loadOpenApi } from './utils.js';
 
 const { readFile } = _promises;
 
-const getConfigPath = async (contentDirectoryPath) => {
+export const getConfigPath = async (contentDirectoryPath) => {
   let configPath = null;
   if (await pathExists(path.join(contentDirectoryPath, 'mint.config.json'))) {
     configPath = path.join(contentDirectoryPath, 'mint.config.json');
